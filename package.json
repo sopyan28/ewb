@@ -8,8 +8,7 @@
     "devstart": "nodemon -e js,ejs,sql,env app.js",
     "dbcreate": "node db/db_create.js",
     "dbsample": "node db/db_insert_sample_data.js",
-    "dbprint": "node db/db_print.js",
-    "devstart-fresh": "npm-run-all dbcreate dbsample dbprint devstart"
+    "devstart-fresh": "npm-run-all dbcreate dbsample devstart"
   },
   "repository": {
     "type": "git",
