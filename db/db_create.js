@@ -2,41 +2,23 @@ const db = require("./db_connection");
 
 /**** Drop existing tables, if any ****/
 
-const drop_assignments_table_sql = "DROP TABLE IF EXISTS assignments;"
+const drop_posts_table_sql = "DROP TABLE IF EXISTS posts;"
 
-db.execute(drop_assignments_table_sql);
-
-const drop_subjects_table_sql = "DROP TABLE IF EXISTS subjects;"
-
-db.execute(drop_subjects_table_sql);
+db.execute(drop_posts_table_sql);
 
 /**** Create tables ****/
 
-const create_subjects_table_sql = `
-    CREATE TABLE subjects (
-        subjectId INT NOT NULL AUTO_INCREMENT,
-        subjectName VARCHAR(45) NOT NULL,
-        PRIMARY KEY (subjectId));
-`
-db.execute(create_subjects_table_sql);
-
-const create_assignments_table_sql = `
-    CREATE TABLE assignments (
-        assignmentId INT NOT NULL AUTO_INCREMENT,
-        title VARCHAR(45) NOT NULL,
-        priority INT NULL,
-        subjectId INT NOT NULL,
-        dueDate DATE NULL,
-        description VARCHAR(150) NULL,
-        PRIMARY KEY (assignmentId),
-        INDEX assignmentSubject_idx (subjectId ASC),
-        CONSTRAINT assignmentSubject
-            FOREIGN KEY (subjectId)
-            REFERENCES subjects (subjectId)
-            ON DELETE RESTRICT
-            ON UPDATE CASCADE);
+const create_posts_table_sql = `
+    CREATE TABLE posts (
+        postId    INT NOT NULL AUTO_INCREMENT,
+        title     VARCHAR(100) NOT NULL,
+        content   VARCHAR(1000) NULL,
+        author    VARCHAR(60) NOT NULL,
+        category  VARCHAR(45) NOT NULL DEFAULT 'Announcement',
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (postId));
 `
 
-db.execute(create_assignments_table_sql);
+db.execute(create_posts_table_sql);
 
 db.end();

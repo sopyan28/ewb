@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= post.title %> — EWB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/stylesheets/ewbStyle.css">
+</head>
+<body>
+
+<div class="aura-bg"></div>
+<div class="toast" id="toast"></div>
+
+<nav>
+  <a class="nav-brand" href="/">
+    <span class="ewb-mark">EWB</span>
+    <span class="ewb-tagline">Empowering Women in Business</span>
+  </a>
+  <ul class="nav-links">
+    <li>
+      <a href="/#about">About <span class="nav-caret">▾</span></a>
+      <div class="nav-dropdown">
+        <a href="/#about">About EWB</a>
+        <a href="/#meet-team">Meet the Team</a>
+      </div>
+    </li>
+    <li><a href="/#gallery">Gallery</a></li>
+    <li><a href="/#resources">Resources</a></li>
+    <li><a href="/#conference">Conference</a></li>
+    <li><a href="/#members" class="active-link">Members</a></li>
+  </ul>
+</nav>
+
+<div class="detail-page" style="position:relative;z-index:1;">
+
+  <!-- Post Detail Card -->
+  <div class="detail-card">
+    <a href="/#members"
+       style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--lavender);text-decoration:none;display:inline-flex;align-items:center;gap:6px;margin-bottom:28px;">
+      ← Back to Members
+    </a>
+
+    <span class="category-badge"><%= post.category %></span>
+    <h1 class="detail-title"><%= post.title %></h1>
+    <div class="detail-meta">By <%= post.author %> &nbsp;·&nbsp; <%= post.createdFormatted %></div>
+    <div class="divider"></div>
+    <div class="detail-content"><%= post.content %></div>
+
+    <div class="detail-actions">
+      <a class="btn-danger"
+         href="/posts/<%= post.postId %>/delete"
+         onclick="return confirm('Delete this post?')">Delete Post</a>
+    </div>
+  </div>
+
+  <!-- Edit Form Card -->
+  <div class="edit-form-card">
+    <h3>Edit Post</h3>
+    <form method="post" action="/posts/<%= post.postId %>">
+      <div class="form-group">
+        <label for="titleInput">Title</label>
+        <input type="text" id="titleInput" name="title"
+               value="<%= post.title %>" required>
+      </div>
+      <div class="form-group">
+        <label for="categoryInput">Category</label>
+        <select id="categoryInput" name="category">
+          <option value="Announcement" <%= post.category === 'Announcement' ? 'selected' : '' %>>Announcement</option>
+          <option value="Event"        <%= post.category === 'Event'        ? 'selected' : '' %>>Event</option>
+          <option value="Recap"        <%= post.category === 'Recap'        ? 'selected' : '' %>>Recap</option>
+          <option value="Resource"     <%= post.category === 'Resource'     ? 'selected' : '' %>>Resource</option>
+          <option value="Other"        <%= post.category === 'Other'        ? 'selected' : '' %>>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="authorInput">Author</label>
+        <input type="text" id="authorInput" name="author"
+               value="<%= post.author %>" required>
+      </div>
+      <div class="form-group">
+        <label for="contentInput">Content</label>
+        <textarea id="contentInput" name="content" rows="6"><%= post.content %></textarea>
+      </div>
+      <button type="submit" class="btn-primary">Save Changes &nbsp;→</button>
+    </form>
+  </div>
+
+</div>
+
+<footer>
+  © 2025 Empowering Women in Business · Bergen County Academies
+</footer>
+
+<script>
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+</script>
+
+</body>
+</html>
