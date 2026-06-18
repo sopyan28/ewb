@@ -195,11 +195,7 @@ mark { background:rgba(168,85,247,0.15); color:var(--plum); padding:1px 4px; bor
 .g-item::after { content:''; position:absolute; inset:0; background:linear-gradient(to bottom, transparent 30%, rgba(107,33,168,0.45)); opacity:0.6; transition:opacity 0.3s; }
 .g-item:hover { transform:translateY(-5px); box-shadow:0 16px 48px rgba(107,33,168,0.18); }
 .g-item:hover::after { opacity:1; }
-.g-item-label {
-  position:absolute; bottom:14px; left:16px; z-index:2;
-  font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:rgba(255,255,255,0.85);
-  font-weight:500;
-}
+.g-item img { width:100%; display:block; }
 
 /* LIGHTBOX */
 .lightbox { display:none; position:fixed; inset:0; z-index:200; background:rgba(8,4,18,0.93); backdrop-filter:blur(10px); align-items:center; justify-content:center; }

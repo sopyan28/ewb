@@ -10,6 +10,7 @@
 </head>
 <body>
 
+
 <div class="aura-bg"></div>
 
 <div class="lightbox" id="lightbox">
@@ -36,6 +37,12 @@
     <li><a onclick="show('resources')" id="nav-resources" href="javascript:void(0)">Resources</a></li>
     <li><a onclick="show('conference')" id="nav-conference" href="javascript:void(0)">Conference</a></li>
     <li><a onclick="show('members')" id="nav-members" href="javascript:void(0)">Members</a></li>
+    <% if (isAuthenticated) { %>
+      <li><span class="nav-user"><%= user.name || user.email %></span></li>
+      <li><a href="/logout" class="btn red">Logout</a></li>
+    <% } else { %>
+      <li><a href="/login" class="btn blue">Login</a></li>
+    <% } %>
   </ul>
 </nav>
 
@@ -158,33 +165,12 @@
   <div class="divider"></div>
 
   <div class="gallery-grid">
-    <div class="g-item" style="height:260px;background:linear-gradient(135deg,#6B21A8 0%,#A855F7 100%)">
-      <div class="g-item-label">Networking Night</div>
-    </div>
-    <div class="g-item" style="height:180px;background:linear-gradient(135deg,#9333ea 0%,#C084FC 100%)">
-      <div class="g-item-label">Spring Conference '24</div>
-    </div>
-    <div class="g-item" style="height:220px;background:linear-gradient(160deg,#7C3AED 0%,#A855F7 60%,#C084FC 100%)">
-      <div class="g-item-label">Workshop Series</div>
-    </div>
-    <div class="g-item" style="height:200px;background:linear-gradient(135deg,#581C87 0%,#7C3AED 100%)">
-      <div class="g-item-label">Speaker Panel</div>
-    </div>
-    <div class="g-item" style="height:240px;background:linear-gradient(150deg,#A855F7 0%,#6B21A8 100%)">
-      <div class="g-item-label">Leadership Summit</div>
-    </div>
-    <div class="g-item" style="height:190px;background:linear-gradient(135deg,#C084FC 0%,#9333ea 100%)">
-      <div class="g-item-label">Founder's Dinner</div>
-    </div>
-    <div class="g-item" style="height:215px;background:linear-gradient(160deg,#6B21A8 0%,#C084FC 100%)">
-      <div class="g-item-label">Resume Workshop</div>
-    </div>
-    <div class="g-item" style="height:170px;background:linear-gradient(135deg,#7C3AED 0%,#A855F7 100%)">
-      <div class="g-item-label">Alumni Q&amp;A</div>
-    </div>
-    <div class="g-item" style="height:230px;background:linear-gradient(150deg,#9333ea 0%,#581C87 100%)">
-      <div class="g-item-label">End of Year Gala</div>
-    </div>
+    <div class="g-item"><img src="/images/cafe.png" alt=""></div>
+    <div class="g-item"><img src="/images/competition.png" alt=""></div>
+    <div class="g-item"><img src="/images/group.png" alt=""></div>
+    <div class="g-item"><img src="/images/polaroids.png" alt=""></div>
+    <div class="g-item"><img src="/images/team.png" alt=""></div>
+    <div class="g-item"><img src="/images/ceo_logo.png" alt=""></div>
   </div>
 </section>
 
@@ -247,6 +233,9 @@
     <p><strong>The Goal Digger Podcast — Jenna Kutcher</strong><br>
     Practical advice for ambitious women on building a life and business they love — covering marketing, mindset, and money.</p>
   </div>
+  <div class="podcast-embed">
+    <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/episode/0jqSiqu1njlfjYQDxZvio5?utm_source=generator&si=441d970b1d194db4" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+  </div>
 
   <div class="nl-strip">
     <div class="nl-inner">
@@ -289,89 +278,90 @@
 <!-- ══════════════════════════════════ MEMBERS ════════════════════════════════ -->
 <section id="members">
 
-  <!-- Password Gate -->
-  <div class="pw-gate" id="pwGate">
-    <div class="pw-card">
-      <div class="pw-lock">🔒</div>
-      <h2>Members Area</h2>
-      <p>Enter the club password to access member posts and announcements.</p>
-      <div class="pw-row">
-        <input type="password" id="pwInput" placeholder="• • • • • • • •"
-               onkeydown="if(event.key==='Enter') checkPw()">
-        <div class="pw-error" id="pwError">Incorrect password. Please try again.</div>
-        <button class="btn-primary" onclick="checkPw()">Enter &nbsp;→</button>
+  <% if (!isAuthenticated) { %>
+    <script>window.location.href = '/login';</script>
+  <% } else { %>
+    <!-- Members Content -->
+    <div class="members-content visible" id="membersContent">
+      <div class="sec-label">Members Only</div>
+      <h2 class="sec-title">Posts &amp; <em>Announcements</em></h2>
+      <div class="divider"></div>
+
+      <div class="members-notice">
+        <p>Welcome, <%= user.name || user.email %>. Your role:
+          <% if (canDelete) { %><strong>President</strong>
+          <% } else if (canPost) { %><strong>Leadership</strong>
+          <% } else { %><strong>Member</strong><% } %>
+        </p>
       </div>
-    </div>
-  </div>
 
-  <!-- Members Content (shown after correct password) -->
-  <div class="members-content" id="membersContent">
-    <div class="sec-label">Members Only</div>
-    <h2 class="sec-title">Posts &amp; <em>Announcements</em></h2>
-    <div class="divider"></div>
+      <!-- Posts list from DB -->
+      <div class="members-section">
+        <h3>Recent Posts</h3>
 
-    <div class="members-notice">
-      <p>Welcome to the EWB member portal. Post announcements, event recaps, or anything you'd like the club to know. All members can view, create, edit, and delete posts.</p>
-    </div>
-
-    <!-- Posts list from DB -->
-    <div class="members-section">
-      <h3>Recent Posts</h3>
-
-      <% if (posts.length === 0) { %>
-        <div class="empty-state">No posts yet. Be the first to share something!</div>
-      <% } else { %>
-        <% posts.forEach(function(post) { %>
-          <div class="post-card">
-            <div class="post-card-meta">
-              <span class="category-badge"><%= post.category %></span>
-              &nbsp;· &nbsp;<%= post.createdFormatted %> &nbsp;· &nbsp;by <%= post.author %>
+        <% if (posts.length === 0) { %>
+          <div class="empty-state">No posts yet.</div>
+        <% } else { %>
+          <% posts.forEach(function(post) { %>
+            <div class="post-card">
+              <div class="post-card-meta">
+                <span class="category-badge"><%= post.category %></span>
+                &nbsp;· &nbsp;<%= post.createdFormatted %> &nbsp;· &nbsp;by <%= post.author %>
+              </div>
+              <div class="post-card-title"><%= post.title %></div>
+              <div class="post-card-content"><%= post.content %></div>
+              <div class="post-card-actions">
+                <% if (canPost) { %>
+                  <a class="btn-ghost" href="/posts/<%= post.postId %>">View &amp; Edit →</a>
+                <% } else { %>
+                  <a class="btn-ghost" href="/posts/<%= post.postId %>">View →</a>
+                <% } %>
+                <% if (canDelete) { %>
+                  <a class="btn-danger"
+                     href="/posts/<%= post.postId %>/delete"
+                     onclick="return confirm('Delete this post?')">Delete</a>
+                <% } %>
+              </div>
             </div>
-            <div class="post-card-title"><%= post.title %></div>
-            <div class="post-card-content"><%= post.content %></div>
-            <div class="post-card-actions">
-              <a class="btn-ghost" href="/posts/<%= post.postId %>">View &amp; Edit →</a>
-              <a class="btn-danger"
-                 href="/posts/<%= post.postId %>/delete"
-                 onclick="return confirm('Delete this post?')">Delete</a>
-            </div>
+          <% }); %>
+        <% } %>
+      </div>
+
+      <!-- Create Post Form (leadership + president only) -->
+      <% if (canPost) { %>
+        <div class="members-section">
+          <h3>New Post</h3>
+          <div class="post-form-card">
+            <form method="post" action="/posts">
+              <div class="form-group">
+                <label for="newTitle">Title</label>
+                <input type="text" id="newTitle" name="title" placeholder="Post title" required>
+              </div>
+              <div class="form-group">
+                <label for="newCategory">Category</label>
+                <select id="newCategory" name="category">
+                  <option value="Announcement">Announcement</option>
+                  <option value="Event">Event</option>
+                  <option value="Recap">Recap</option>
+                  <option value="Resource">Resource</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="newAuthor">Your Name</label>
+                <input type="text" id="newAuthor" name="author" value="<%= user.name || user.email %>" readonly required>
+              </div>
+              <div class="form-group">
+                <label for="newContent">Content</label>
+                <textarea id="newContent" name="content" placeholder="Write your post…" rows="5"></textarea>
+              </div>
+              <button type="submit" class="btn-primary">Post &nbsp;→</button>
+            </form>
           </div>
-        <% }); %>
+        </div>
       <% } %>
     </div>
-
-    <!-- Create Post Form -->
-    <div class="members-section">
-      <h3>New Post</h3>
-      <div class="post-form-card">
-        <form method="post" action="/posts">
-          <div class="form-group">
-            <label for="newTitle">Title</label>
-            <input type="text" id="newTitle" name="title" placeholder="Post title" required>
-          </div>
-          <div class="form-group">
-            <label for="newCategory">Category</label>
-            <select id="newCategory" name="category">
-              <option value="Announcement">Announcement</option>
-              <option value="Event">Event</option>
-              <option value="Recap">Recap</option>
-              <option value="Resource">Resource</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="newAuthor">Your Name</label>
-            <input type="text" id="newAuthor" name="author" placeholder="Your name" required>
-          </div>
-          <div class="form-group">
-            <label for="newContent">Content</label>
-            <textarea id="newContent" name="content" placeholder="Write your post…" rows="5"></textarea>
-          </div>
-          <button type="submit" class="btn-primary">Post &nbsp;→</button>
-        </form>
-      </div>
-    </div>
-  </div>
+  <% } %>
 
 </section>
 
@@ -398,7 +388,7 @@
       </div>
       <div class="id-card-stripe">
         <div class="id-card-chip"></div>
-        <div class="id-card-name">Sofia Chen</div>
+        <div class="id-card-name">Nandita Dani</div>
         <div class="id-card-role">Co-President</div>
         <div class="id-card-dots"><span></span><span></span><span></span></div>
       </div>
@@ -413,13 +403,14 @@
       </div>
       <div class="id-card-stripe">
         <div class="id-card-chip"></div>
-        <div class="id-card-name">Maya Patel</div>
+        <div class="id-card-name">Chloe Chung</div>
         <div class="id-card-role">Co-President</div>
         <div class="id-card-dots"><span></span><span></span><span></span></div>
       </div>
     </div>
   </div>
 
+  <p>wahoo</p>
   <!-- Officers -->
   <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--lavender);margin-top:40px;margin-bottom:16px;">Officers</div>
   <div class="team-grid-officers">
@@ -433,8 +424,8 @@
       </div>
       <div class="id-card-stripe">
         <div class="id-card-chip"></div>
-        <div class="id-card-name">Leila Ramos</div>
-        <div class="id-card-role">VP of Events</div>
+        <div class="id-card-name">Victoria An</div>
+        <div class="id-card-role">Promotions Director</div>
         <div class="id-card-dots"><span></span><span></span><span></span></div>
       </div>
     </div>
@@ -448,8 +439,8 @@
       </div>
       <div class="id-card-stripe">
         <div class="id-card-chip"></div>
-        <div class="id-card-name">Anika Torres</div>
-        <div class="id-card-role">VP of Marketing</div>
+        <div class="id-card-name">Kierra DCosta</div>
+        <div class="id-card-role">Promotions Director</div>
         <div class="id-card-dots"><span></span><span></span><span></span></div>
       </div>
     </div>
@@ -463,7 +454,7 @@
       </div>
       <div class="id-card-stripe">
         <div class="id-card-chip"></div>
-        <div class="id-card-name">Priya Nair</div>
+        <div class="id-card-name">Claire Qin</div>
         <div class="id-card-role">Treasurer</div>
         <div class="id-card-dots"><span></span><span></span><span></span></div>
       </div>
@@ -478,8 +469,8 @@
       </div>
       <div class="id-card-stripe">
         <div class="id-card-chip"></div>
-        <div class="id-card-name">Jordan Kim</div>
-        <div class="id-card-role">Secretary</div>
+        <div class="id-card-name">Sophia Yang</div>
+        <div class="id-card-role">Webmaster</div>
         <div class="id-card-dots"><span></span><span></span><span></span></div>
       </div>
     </div>
@@ -512,21 +503,6 @@
       /* re-show content if already unlocked in this session */
     }
   });
-
-  /* ── Password gate ── */
-  const MEMBER_PW = 'ewb2025';
-  function checkPw() {
-    const val = document.getElementById('pwInput').value;
-    const err = document.getElementById('pwError');
-    if (val === MEMBER_PW) {
-      document.getElementById('pwGate').style.display = 'none';
-      document.getElementById('membersContent').classList.add('visible');
-      err.style.display = 'none';
-    } else {
-      err.style.display = 'block';
-      document.getElementById('pwInput').value = '';
-    }
-  }
 
   /* ── Lightbox ── */
   function closeLb() {

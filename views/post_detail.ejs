@@ -30,6 +30,11 @@
     <li><a href="/#resources">Resources</a></li>
     <li><a href="/#conference">Conference</a></li>
     <li><a href="/#members" class="active-link">Members</a></li>
+    <% if (isAuthenticated) { %>
+      <li><a href="/logout" class="btn red">Logout</a></li>
+    <% } else { %>
+      <li><a href="/login" class="btn blue">Login</a></li>
+    <% } %>
   </ul>
 </nav>
 
@@ -48,13 +53,16 @@
     <div class="divider"></div>
     <div class="detail-content"><%= post.content %></div>
 
+    <% if (canDelete) { %>
     <div class="detail-actions">
       <a class="btn-danger"
          href="/posts/<%= post.postId %>/delete"
          onclick="return confirm('Delete this post?')">Delete Post</a>
     </div>
+    <% } %>
   </div>
 
+  <% if (canPost) { %>
   <!-- Edit Form Card -->
   <div class="edit-form-card">
     <h3>Edit Post</h3>
@@ -86,6 +94,7 @@
       <button type="submit" class="btn-primary">Save Changes &nbsp;→</button>
     </form>
   </div>
+  <% } %>
 
 </div>
 
