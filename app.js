@@ -35,8 +35,8 @@ app.use((req, res, next) => {
     res.locals.isAuthenticated = authenticated;
     res.locals.user = authenticated ? req.oidc.user : null;
     res.locals.userRoles = userRoles;
-    res.locals.canPost = userRoles.includes('leadership') || userRoles.includes('president');
-    res.locals.canDelete = userRoles.includes('president');
+    res.locals.canPost = userRoles.includes('Leadership') || userRoles.includes('president');
+    res.locals.canDelete = userRoles.includes('Presidents');
     next();
 });
 
